@@ -92,6 +92,23 @@ RotatingY.update = function ()
     return;
 };
 
+for (var i = 0; i < RotatingY.elements.length; i++)
+{
+    var elementStyle = RotatingY.elements[i].style;
+
+    // Temporary disable CSS transition to jump directly between rotations.
+    elementStyle.transition = null;
+    elementStyle.transform = "rotateY(" + RotatingY.rotation + "deg)";
+    RotatingY.elements[i].offsetHeight;
+    // Re-enable CSS transition.
+    elementStyle.transition = "transform " + RotatingY.SPEED + "ms linear";
+}
+
+/* Re-update the transition and rotation on webpage elements
+ * immediately.
+ */
+RotatingY.update();
+
 /* Create a new interval to repeatedly update the transition and rotation
  * on webpage elements.
  */
