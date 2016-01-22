@@ -1,6 +1,6 @@
 /*
  * Rotating.js
- * Version 20160121
+ * Version 20160122
  * Written by Harry Wong (RedAndBlueEraser)
  */
 
