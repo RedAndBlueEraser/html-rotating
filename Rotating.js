@@ -44,6 +44,65 @@ RotatingY.elements = document.getElementsByClassName("rotating-y");
  * The current rotation in degrees, as a number.
  */
 RotatingY.rotation = RotatingY.START_ROTATION_CYCLE;
+/**
+ * The CSS transition used to smoothly rotate webpage elements, as a string.
+ */
+RotatingY.transition = "transform " + RotatingY.SPEED + "ms linear";
+
+/**
+ * Sets the CSS transform for webpage elements.
+ * @param  transform  the CSS transform, as a string.
+ */
+RotatingY.setElementsStyleTransform = function (transform)
+{
+    "use strict";
+
+    // Store elements and elements.length as a local variable.
+    var elements = this.elements,
+        elementsLength = elements.length;
+
+    for (var i = 0; i < elementsLength; i++)
+    {
+        var elementStyle = elements[i].style;
+
+        // Set the CSS transform for all vendor prefixes.
+        elementStyle.WebkitTransform = transform;
+        elementStyle.MozTransform = transform;
+        elementStyle.OTransform = transform;
+        elementStyle.transform = transform;
+
+        // Force a reflow on the element.
+        elements[i].offsetHeight;
+    }
+
+    return;
+};
+
+/**
+ * Sets the CSS transition for webpage elements.
+ * @param  transition  the CSS transition, as a string.
+ */
+RotatingY.setElementsStyleTransition = function (transition)
+{
+    "use strict";
+
+    // Store elements and elements.length as a local variable.
+    var elements = this.elements,
+        elementsLength = elements.length;
+
+    for (var i = 0; i < elementsLength; i++)
+    {
+        var elementStyle = elements[i].style;
+
+        // Set the CSS transition for all vendor prefixes.
+        elementStyle.WebkitTransition = "-webkit-" + transition;
+        elementStyle.MozTransition = "-moz-" + transition;
+        elementStyle.OTransition = "-o-" + transition;
+        elementStyle.transition = transition;
+    }
+
+    return;
+};
 
 /**
  * Updates the transition and rotation on webpage elements.
@@ -61,17 +120,11 @@ RotatingY.update = function ()
         // Reset current rotation to the initial rotation.
         this.rotation = this.START_ROTATION_CYCLE;
 
-        for (var i = 0; i < this.elements.length; i++)
-        {
-            var elementStyle = this.elements[i].style;
-
-            // Temporary disable CSS transition to jump directly between rotations.
-            elementStyle.transition = null;
-            elementStyle.transform = "rotateY(" + this.rotation + "deg)";
-            this.elements[i].offsetHeight;
-            // Re-enable CSS transition.
-            elementStyle.transition = "transform " + this.SPEED + "ms linear";
-        }
+        // Temporary disable CSS transition to jump directly between rotations.
+        this.setElementsStyleTransition(null);
+        this.setElementsStyleTransform("rotateY(" + this.rotation + "deg)");
+        // Re-enable CSS transition.
+        this.setElementsStyleTransition(this.transition);
 
         /* Re-update the transition and rotation on webpage elements
          * immediately.
@@ -80,29 +133,17 @@ RotatingY.update = function ()
     }
     else
     {
-        for (var i = 0; i < this.elements.length; i++)
-        {
-            var elementStyle = this.elements[i].style;
-
-            // Rotate webpage elements normally (using transition).
-            elementStyle.transform = "rotateY(" + this.rotation + "deg)";
-        }
+        this.setElementsStyleTransform("rotateY(" + this.rotation + "deg)");
     }
 
     return;
 };
 
-for (var i = 0; i < RotatingY.elements.length; i++)
-{
-    var elementStyle = RotatingY.elements[i].style;
-
-    // Temporary disable CSS transition to jump directly between rotations.
-    elementStyle.transition = null;
-    elementStyle.transform = "rotateY(" + RotatingY.rotation + "deg)";
-    RotatingY.elements[i].offsetHeight;
-    // Re-enable CSS transition.
-    elementStyle.transition = "transform " + RotatingY.SPEED + "ms linear";
-}
+// Temporary disable CSS transition to jump directly between rotations.
+RotatingY.setElementsStyleTransition(null);
+RotatingY.setElementsStyleTransform("rotateY(" + RotatingY.rotation + "deg)");
+// Re-enable CSS transition.
+RotatingY.setElementsStyleTransition(RotatingY.transition);
 
 /* Re-update the transition and rotation on webpage elements
  * immediately.
