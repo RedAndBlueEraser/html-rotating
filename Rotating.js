@@ -18,27 +18,27 @@ var RotatingY = {};
 /**
  * The rotation for a full cycle in degrees, as a number.
  */
-RotatingY.FULL_ROTATION_CYCLE = 180;
+Object.defineProperty(RotatingY, "FULL_ROTATION_CYCLE", { value: 180 });
 /**
  * The rotation for half a cycle in degrees, as a number.
  */
-RotatingY.HALF_ROTATION_CYCLE = RotatingY.FULL_ROTATION_CYCLE / 2;
+Object.defineProperty(RotatingY, "HALF_ROTATION_CYCLE", { value: RotatingY.FULL_ROTATION_CYCLE / 2 });
 /**
  * The initial rotation in degrees, as a number.
  */
-RotatingY.START_ROTATION_CYCLE = -RotatingY.HALF_ROTATION_CYCLE;
+Object.defineProperty(RotatingY, "START_ROTATION_CYCLE", { value: -RotatingY.HALF_ROTATION_CYCLE });
 /**
  * The final rotation in degrees, as a number.
  */
-RotatingY.END_ROTATION_CYCLE = RotatingY.START_ROTATION_CYCLE + RotatingY.FULL_ROTATION_CYCLE;
+Object.defineProperty(RotatingY, "END_ROTATION_CYCLE", { value: RotatingY.START_ROTATION_CYCLE + RotatingY.FULL_ROTATION_CYCLE });
 /**
  * The clockwise direction, as a number.
  */
-RotatingY.CLOCKWISE = -1;
+Object.defineProperty(RotatingY, "CLOCKWISE", { value: -1 });
 /**
  * The anticlockwise direction, as a number.
  */
-RotatingY.ANTICLOCKWISE = -RotatingY.CLOCKWISE;
+Object.defineProperty(RotatingY, "ANTICLOCKWISE", { value: -RotatingY.CLOCKWISE });
 /**
  * The direction of the rotation, as a number.
  */
