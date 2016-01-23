@@ -50,6 +50,17 @@ RotatingY.rotation = RotatingY.START_ROTATION_CYCLE;
 RotatingY.transition = "transform " + RotatingY.SPEED + "ms linear";
 
 /**
+ * Returns the CSS transform used to rotate webpage elements.
+ * @return  the CSS transform used to rotate webpage elements, as a string.
+ */
+RotatingY.getTransform = function ()
+{
+    "use strict";
+
+    return "rotateY(" + this.rotation + "deg)";
+};
+
+/**
  * Sets the CSS transform for webpage elements.
  * @param  transform  the CSS transform, as a string.
  */
@@ -122,7 +133,7 @@ RotatingY.update = function ()
 
         // Temporary disable CSS transition to jump directly between rotations.
         this.setElementsStyleTransition(null);
-        this.setElementsStyleTransform("rotateY(" + this.rotation + "deg)");
+        this.setElementsStyleTransform(this.getTransform());
         // Re-enable CSS transition.
         this.setElementsStyleTransition(this.transition);
 
@@ -133,7 +144,7 @@ RotatingY.update = function ()
     }
     else
     {
-        this.setElementsStyleTransform("rotateY(" + this.rotation + "deg)");
+        this.setElementsStyleTransform(this.getTransform());
     }
 
     return;
@@ -141,7 +152,7 @@ RotatingY.update = function ()
 
 // Temporary disable CSS transition to jump directly between rotations.
 RotatingY.setElementsStyleTransition(null);
-RotatingY.setElementsStyleTransform("rotateY(" + RotatingY.rotation + "deg)");
+RotatingY.setElementsStyleTransform(RotatingY.getTransform());
 // Re-enable CSS transition.
 RotatingY.setElementsStyleTransition(RotatingY.transition);
 
