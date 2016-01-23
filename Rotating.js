@@ -1,6 +1,6 @@
 /*
  * Rotating.js
- * Version 20160122
+ * Version 20160123
  * Written by Harry Wong (RedAndBlueEraser)
  */
 
@@ -31,6 +31,18 @@ RotatingY.START_ROTATION_CYCLE = -RotatingY.HALF_ROTATION_CYCLE;
  * The final rotation in degrees, as a number.
  */
 RotatingY.END_ROTATION_CYCLE = RotatingY.START_ROTATION_CYCLE + RotatingY.FULL_ROTATION_CYCLE;
+/**
+ * The clockwise direction, as a number.
+ */
+RotatingY.CLOCKWISE = -1;
+/**
+ * The anticlockwise direction, as a number.
+ */
+RotatingY.ANTICLOCKWISE = -RotatingY.CLOCKWISE;
+/**
+ * The direction of the rotation, as a number.
+ */
+RotatingY.DIRECTION = RotatingY.ANTICLOCKWISE;
 /**
  * The speed of the rotation in milliseconds, as a number.
  */
@@ -123,7 +135,7 @@ RotatingY.update = function ()
     "use strict";
 
     // Add current rotation. This can be in smaller steps for more precision.
-    this.rotation += this.FULL_ROTATION_CYCLE;
+    this.rotation += this.DIRECTION * this.FULL_ROTATION_CYCLE;
 
     // If current rotation is greater than the final rotation.
     if (this.rotation > this.END_ROTATION_CYCLE)
@@ -142,8 +154,26 @@ RotatingY.update = function ()
          */
         this.update();
     }
+    // If current rotation is smaller than the initial rotation.
+    else if (this.rotation < this.START_ROTATION_CYCLE)
+    {
+        // Set current rotation to the final rotation.
+        this.rotation = this.END_ROTATION_CYCLE;
+
+        // Temporary disable CSS transition to jump directly between rotations.
+        this.setElementsStyleTransition(null);
+        this.setElementsStyleTransform(this.getTransform());
+        // Re-enable CSS transition.
+        this.setElementsStyleTransition(this.transition);
+
+        /* Re-update the transition and rotation on webpage elements
+         * immediately.
+         */
+        this.update();
+    }
     else
     {
+        // Rotate webpage elements normally (using transition).
         this.setElementsStyleTransform(this.getTransform());
     }
 
