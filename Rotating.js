@@ -55,15 +55,15 @@ RotatingY.intervalID = null;
 /**
  * The elements to be rotated.
  */
-RotatingY.elements = document.getElementsByClassName("rotating-y");
+RotatingY.elements = [];
 /**
  * The current rotation in degrees, as a number.
  */
-RotatingY.rotation = RotatingY.START_ROTATION_CYCLE;
+RotatingY.rotation = 0;
 /**
  * The CSS transition used to smoothly rotate webpage elements, as a string.
  */
-RotatingY.transition = "transform " + RotatingY.SPEED + "ms linear";
+RotatingY.transition = "";
 
 /**
  * Returns the CSS transform used to rotate webpage elements.
@@ -184,28 +184,59 @@ RotatingY.update = function ()
     return;
 };
 
-// Temporary disable CSS transition to jump directly between rotations.
-RotatingY.setElementsStyleTransition(null);
-RotatingY.setElementsStyleTransform(RotatingY.getTransform());
-// Re-enable CSS transition.
-RotatingY.setElementsStyleTransition(RotatingY.transition);
-
-/* Re-update the transition and rotation on webpage elements
- * immediately.
+/**
+ * Starts the smooth and continuous rotation on webpage elements.
  */
-RotatingY.update();
+RotatingY.main = function ()
+{
+    "use strict";
 
-/* Create a new interval to repeatedly update the transition and rotation
- * on webpage elements.
- */
-RotatingY.intervalID = setInterval(
+    // Store this (RotatingY) as a local variable.
+    var self = this;
+
+    // Initialize variables.
+    this.elements = document.getElementsByClassName("rotating-y");
+    this.rotation = this.START_ROTATION_CYCLE;
+    this.transition = "transform " + this.SPEED + "ms linear";
+
+    // Temporary disable CSS transition to jump directly between rotations.
+    this.setElementsStyleTransition(null);
+    this.setElementsStyleTransform(this.getTransform());
+    // Re-enable CSS transition.
+    this.setElementsStyleTransition(this.transition);
+
+    /* Re-update the transition and rotation on webpage elements
+     * immediately.
+     */
+    this.update();
+
+    // If an interval already exists.
+    if (this.intervalID !== null)
+    {
+        // Cancel the existing interval.
+        clearInterval(this.intervalID);
+    }
+    /* Create a new interval to repeatedly update the transition and rotation
+     * on webpage elements.
+     */
+    this.intervalID = setInterval(
+        function ()
+        {
+            self.update();
+        },
+        this.SPEED
+        );
+
+    return;
+};
+
+window.addEventListener(
+    "load",
     function ()
     {
         "use strict";
-
-        RotatingY.update();
-    },
-    RotatingY.SPEED
+        RotatingY.main();
+    }
     );
 
 /**
