@@ -49,6 +49,10 @@ RotatingY.DIRECTION = RotatingY.ANTICLOCKWISE;
 RotatingY.SPEED = 1000;
 
 /**
+ * The identifier of the interval for the continuous rotation.
+ */
+RotatingY.intervalID = null;
+/**
  * The elements to be rotated.
  */
 RotatingY.elements = document.getElementsByClassName("rotating-y");
@@ -194,7 +198,7 @@ RotatingY.update();
 /* Create a new interval to repeatedly update the transition and rotation
  * on webpage elements.
  */
-setInterval(
+RotatingY.intervalID = setInterval(
     function ()
     {
         "use strict";
