@@ -47,6 +47,10 @@ RotatingY.DIRECTION = RotatingY.ANTICLOCKWISE;
  * The speed of the rotation in milliseconds, as a number.
  */
 RotatingY.SPEED = 1000;
+/**
+ * The step of the rotation in degrees, as a number.
+ */
+RotatingY.STEP = RotatingY.FULL_ROTATION_CYCLE;
 
 /**
  * The identifier of the interval for the continuous rotation.
@@ -138,8 +142,8 @@ RotatingY.update = function ()
 {
     "use strict";
 
-    // Add current rotation. This can be in smaller steps for more precision.
-    this.rotation += this.DIRECTION * this.FULL_ROTATION_CYCLE;
+    // Add current rotation.
+    this.rotation += this.DIRECTION * this.STEP;
 
     // If current rotation is greater than the final rotation.
     if (this.rotation > this.END_ROTATION_CYCLE)
