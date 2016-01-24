@@ -1,6 +1,6 @@
 /*
  * Rotating.js
- * Version 20160123
+ * Version 20160124
  * Written by Harry Wong (RedAndBlueEraser)
  */
 
@@ -40,6 +40,14 @@ Object.defineProperty(RotatingY, "CLOCKWISE", { value: -1 });
  */
 Object.defineProperty(RotatingY, "ANTICLOCKWISE", { value: -RotatingY.CLOCKWISE });
 /**
+ * The CSS class selector for active transition, as a string.
+ */
+Object.defineProperty(RotatingY, "TRANSITION_CSS_CLASS_SELECTOR", { value: "rotating-y-transition" });
+/**
+ * The CSS class selector for disabled transition, as a string.
+ */
+Object.defineProperty(RotatingY, "NO_TRANSITION_CSS_CLASS_SELECTOR", { value: "rotating-y-no-transition" });
+/**
  * The direction of the rotation, as a number.
  */
 RotatingY.DIRECTION = RotatingY.ANTICLOCKWISE;
@@ -64,10 +72,6 @@ RotatingY.elements = [];
  * The current rotation in degrees, as a number.
  */
 RotatingY.rotation = 0;
-/**
- * The CSS transition used to smoothly rotate webpage elements, as a string.
- */
-RotatingY.transition = "";
 
 /**
  * Returns the CSS transform used to rotate webpage elements.
@@ -110,10 +114,10 @@ RotatingY.setElementsStyleTransform = function (transform)
 };
 
 /**
- * Sets the CSS transition for webpage elements.
- * @param  transition  the CSS transition, as a string.
+ * Sets the CSS transition to active or disabled for webpage elements.
+ * @param  transition  the activeness of the CSS transition, as a boolean.
  */
-RotatingY.setElementsStyleTransition = function (transition)
+RotatingY.setTransition = function (transition)
 {
     "use strict";
 
@@ -121,18 +125,28 @@ RotatingY.setElementsStyleTransition = function (transition)
     var elements = this.elements,
         elementsLength = elements.length;
 
-    for (var i = 0; i < elementsLength; i++)
+    // If transition is truthy.
+    if (transition == true)
     {
-        var elementStyle = elements[i].style;
-
-        // Set the CSS transition for all vendor prefixes.
-        elementStyle.WebkitTransition = "-webkit-" + transition;
-        elementStyle.MozTransition = "-moz-" + transition;
-        elementStyle.OTransition = "-o-" + transition;
-        elementStyle.transition = transition;
+        for (var i = 0; i < elementsLength; i++)
+        {
+            // Remove and add CSS classes.
+            elements[i].classList.remove(this.NO_TRANSITION_CSS_CLASS_SELECTOR);
+            elements[i].classList.add(this.TRANSITION_CSS_CLASS_SELECTOR);
+        }
     }
+    else
+    {
+        for (var i = 0; i < elementsLength; i++)
+        {
+            // Remove and add CSS classes.
+            elements[i].classList.remove(this.TRANSITION_CSS_CLASS_SELECTOR);
+            elements[i].classList.add(this.NO_TRANSITION_CSS_CLASS_SELECTOR);
 
-    return;
+            // Force a reflow on the element.
+            elements[i].offsetHeight;
+        }
+    }
 };
 
 /**
@@ -152,10 +166,10 @@ RotatingY.update = function ()
         this.rotation = this.START_ROTATION_CYCLE;
 
         // Temporary disable CSS transition to jump directly between rotations.
-        this.setElementsStyleTransition(null);
+        this.setTransition(false);
         this.setElementsStyleTransform(this.getTransform());
         // Re-enable CSS transition.
-        this.setElementsStyleTransition(this.transition);
+        this.setTransition(true);
 
         /* Re-update the transition and rotation on webpage elements
          * immediately.
@@ -169,10 +183,10 @@ RotatingY.update = function ()
         this.rotation = this.END_ROTATION_CYCLE;
 
         // Temporary disable CSS transition to jump directly between rotations.
-        this.setElementsStyleTransition(null);
+        this.setTransition(false);
         this.setElementsStyleTransform(this.getTransform());
         // Re-enable CSS transition.
-        this.setElementsStyleTransition(this.transition);
+        this.setTransition(true);
 
         /* Re-update the transition and rotation on webpage elements
          * immediately.
@@ -201,13 +215,23 @@ RotatingY.main = function ()
     // Initialize variables.
     this.elements = document.getElementsByClassName("rotating-y");
     this.rotation = this.START_ROTATION_CYCLE;
-    this.transition = "transform " + this.SPEED + "ms linear";
+
+    // Create CSS class for active and disabled transitions.
+    var transition = "transform " + this.SPEED + "ms linear";
+    var style = document.createElement('style');
+    style.innerHTML = "." + this.TRANSITION_CSS_CLASS_SELECTOR +
+        "{-webkit-transition:-webkit-" + transition +
+        ";-moz-transition:-moz-" + transition + ";-o-transition:-o-" +
+        transition + ";transition:" + transition +
+        ";}." + this.NO_TRANSITION_CSS_CLASS_SELECTOR +
+        "{-webkit-transition:none;-moz-transition:none;-o-transition:none;transition:none;}";
+    document.getElementsByTagName("head")[0].appendChild(style);
 
     // Temporary disable CSS transition to jump directly between rotations.
-    this.setElementsStyleTransition(null);
+    this.setTransition(false);
     this.setElementsStyleTransform(this.getTransform());
     // Re-enable CSS transition.
-    this.setElementsStyleTransition(this.transition);
+    this.setTransition(true);
 
     /* Re-update the transition and rotation on webpage elements
      * immediately.
